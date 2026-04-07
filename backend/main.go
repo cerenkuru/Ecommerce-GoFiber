@@ -1,33 +1,32 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
+	"github.com/cerenkuru/Ecommerce-GoFiber/bootstrap"
 	"github.com/joho/godotenv"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
+	if err := godotenv.Load(); err != nil {
 		log.Fatal(".env dosyası yüklenemedi")
 	}
 
-	connectionStr := os.Getenv("DB_USER") + ":" +
-		os.Getenv("DB_PASS") + "@tcp(" +
-		os.Getenv("DB_HOST") + ":" +
-		os.Getenv("DB_PORT") + ")/" +
-		os.Getenv("DB_NAME") + "?charset=utf8mb4&parseTime=True&loc=Local"
+	builder := bootstrap.NewAppBuilder()
+	builder.WithDatabase()
+	builder.WithDependencies()
+	builder.WithMiddleware()
+	builder.WithRoutes()
 
-	db, err := gorm.Open(mysql.Open(connectionStr), &gorm.Config{})
+	app, err := builder.Build()
 	if err != nil {
-		log.Fatal("MySQL bağlantı hatası:", err)
+		log.Fatal(err)
 	}
-	fmt.Println("MySQL bağlantısı kuruldu")
 
-	sqlDB, _ := db.DB()
-	defer sqlDB.Close()
+	port := os.Getenv("APP_PORT")
+	if port == "" {
+		port = "3000"
+	}
+	log.Fatal(app.Listen(":" + port))
 }

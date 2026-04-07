@@ -7,7 +7,6 @@ import (
 	"github.com/cerenkuru/Ecommerce-GoFiber/repositories"
 )
 
-// ProductService defines product business logic
 type ProductService interface {
 	GetAllProducts(category, search string) ([]models.Product, error)
 	GetProductByID(id uint) (*models.Product, error)
@@ -17,7 +16,6 @@ type productService struct {
 	repo repositories.ProductRepository
 }
 
-// NewProductService creates a new product service
 func NewProductService(repo repositories.ProductRepository) ProductService {
 	return &productService{repo: repo}
 }
