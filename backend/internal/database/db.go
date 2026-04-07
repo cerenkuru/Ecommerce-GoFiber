@@ -27,12 +27,12 @@ func GetDB() (*gorm.DB, error) {
 
 		db, err := gorm.Open(mysql.Open(connectionStr), &gorm.Config{})
 		if err != nil {
-			initErr = fmt.Errorf("MySQL baglanti hatasi: %w", err)
+			initErr = fmt.Errorf("MySQL connection error: %w", err)
 			return
 		}
 
 		if err := db.AutoMigrate(&models.Product{}, &models.CartItem{}); err != nil {
-			initErr = fmt.Errorf("migrate hatasi: %w", err)
+			initErr = fmt.Errorf("Migrate error: %w", err)
 			return
 		}
 
